@@ -21,4 +21,14 @@ public interface UserRepository extends JpaRepository<User, Integer>{
     @Query(value = "UPDATE User u SET u.enabled =:status WHERE u.id_user != 1", nativeQuery = true)
     public void updateStatusForAllUsers(@Param("status") boolean status);
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM users_roles WHERE id_user =:id", nativeQuery = true)
+    public void deleteUserRoleByIdUser(@Param("id") int id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM user WHERE id_user =:id", nativeQuery = true)
+    public void deleteUserByIdUser(@Param("id") int id);
+
 }
