@@ -57,7 +57,7 @@ public class ProductController {
                     .orElseThrow(() -> new UserNotFoundException("User not found with id:" + idUser)));
 
             String productName = product.getProductName();
-            ArrayList<User.Purchase> purchases = new ArrayList<>();
+            ArrayList<User.Purchase> purchases = user.get().getListOfPurchases();
 
             buyProduct.get().setStock(product.getStock() - nrPurchases);
             purchases.add(new User.Purchase(productName,nrPurchases));
