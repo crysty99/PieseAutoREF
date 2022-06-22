@@ -75,8 +75,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //TODO updateUserAddress
+    @PatchMapping("/profile/editAddress/{idUser}")
+    public ResponseEntity<User> updateUserAddress(@PathVariable("idUser") int id,@RequestParam("address") String address) throws UserNotFoundException{
+        Optional<User> editUser = Optional.ofNullable(repo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id:" + id)));
 
+        editUser.get().setAddress(address);
+        repo.save(editUser.get());
+
+        return ResponseEntity.ok(editUser.get());
+    }
     //TODO uploadUserProfileImage
 
     //TODO getUserProfileImageLocation

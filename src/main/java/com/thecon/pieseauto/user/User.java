@@ -190,4 +190,5 @@ public class User {
             this.numberOfProducts = numberOfProducts;
         }
     }
+
 }
