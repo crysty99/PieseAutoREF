@@ -3,7 +3,6 @@ package com.thecon.pieseauto.product;
 import com.thecon.pieseauto.user.User;
 import com.thecon.pieseauto.user.UserNotFoundException;
 import com.thecon.pieseauto.user.UserRepository;
-import com.thecon.pieseauto.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,14 +53,16 @@ public class ProductController {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id:" + idPiesa)));
 
         if(buyProduct.get().getStock() >= nrPurchases) {
-            buyProduct.get().setStock(product.getStock() - nrPurchases);
-            /**/
-            String productName = product.getProductName();
             Optional<User> user = Optional.ofNullable(repoUser.findById(idUser)
                     .orElseThrow(() -> new UserNotFoundException("User not found with id:" + idUser)));
-            ArrayList<User.Purchase> purchase = user.get().getListOfPurchases();
-            purchase.add(new User.Purchase(productName,nrPurchases));
-            user.get().setListOfPurchases(purchase);
+
+            String productName = product.getProductName();
+            ArrayList<User.Purchase> purchases = new ArrayList<>();
+
+            buyProduct.get().setStock(product.getStock() - nrPurchases);
+            purchases.add(new User.Purchase(productName,nrPurchases));
+            System.out.println(purchases);
+            user.get().setListOfPurchases(purchases);
 
             repoUser.save(user.get());
             repo.save(buyProduct.get());

@@ -1,18 +1,23 @@
 package com.thecon.pieseauto.user;
 
-import com.thecon.pieseauto.product.Product;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.Persistent;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import org.hibernate.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
+@TypeDefs({
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +37,11 @@ public class User {
     @Column
     private byte[] profileImage;
 
+    //@Type(type = "jsonb")
+    //@Column(columnDefinition = "jsonb")
     @Lob
     @Column
-    private ArrayList<Purchase> listOfPurchases;
+    private ArrayList<Purchase> listOfPurchases = new ArrayList<Purchase>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -150,13 +157,21 @@ public class User {
                 '}';
     }
 
-    public static class Purchase {
+    public static class Purchase implements Serializable {
         String productName;
         int numberOfProducts;
 
         public Purchase(String productName, int numberOfProducts) {
             this.productName = productName;
             this.numberOfProducts = numberOfProducts;
+        }
+
+        @Override
+        public String toString() {
+            return "Purchase{" +
+                    "productName='" + productName + '\'' +
+                    ", numberOfProducts=" + numberOfProducts +
+                    '}';
         }
 
         public String getProductName() {
