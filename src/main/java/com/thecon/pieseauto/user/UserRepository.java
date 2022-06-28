@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 
     public User getUserByNameAndEmail(String name, String email);
     public List<User> getUsersByRoles(String role);
-
+    
     //TODO change id to roles
     @Modifying
     @Transactional

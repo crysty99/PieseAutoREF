@@ -1,23 +1,20 @@
 package com.thecon.pieseauto.user;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
-@TypeDefs({
-        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,12 +30,10 @@ public class User {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private java.util.Date dateOfBirth;
-    @Lob
-    @Column
-    private byte[] profileImage;
 
-    //@Type(type = "jsonb")
-    //@Column(columnDefinition = "jsonb")
+    @Column
+    private String profileImageLocation;
+
     @Lob
     @Column
     private ArrayList<Purchase> listOfPurchases = new ArrayList<Purchase>();
@@ -51,12 +46,12 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
+    public String getProfileImageLocation() {
+        return profileImageLocation;
     }
 
-    public byte[] getProfileImage() {
-        return profileImage;
+    public void setProfileImageLocation(String profileImageLocation) {
+        this.profileImageLocation = profileImageLocation;
     }
 
     public int getIdUser() {
@@ -151,7 +146,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", enabled=" + enabled +
                 ", dateOfBirth=" + dateOfBirth +
-                ", profileImage=" + Arrays.toString(profileImage) +
+                ", profileImageLocation='" + profileImageLocation + '\'' +
                 ", listOfPurchases=" + listOfPurchases +
                 ", roles=" + roles +
                 '}';

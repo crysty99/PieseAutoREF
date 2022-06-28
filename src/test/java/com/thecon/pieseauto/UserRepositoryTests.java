@@ -42,26 +42,6 @@ public class UserRepositoryTests {
 
         Assertions.assertNotNull(savedUser);
     }
-    @Test
-    public void testAddImage() throws IOException {
-        int idUser = 3;
-        Optional<User> optionalUser = repo.findById(idUser);
-        User user = optionalUser.get();
-
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("poze/poza2.png");
-
-        if(inputStream == null) {
-            fail("Unable to get resources");
-        }
-
-        user.setProfileImage(IOUtils.toByteArray(inputStream));
-        repo.save(user);
-
-        User updatedUser= repo.findById(idUser).get();
-        Assertions.assertNotNull(updatedUser.getProfileImage());
-    }
 
     @Test
     public void testListAll(){
